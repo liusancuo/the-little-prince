@@ -1,0 +1,19 @@
+{
+  "name": "the-little-prince",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node ./src/parser/text-to-json.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "self-use-dep-installer": "^0.0.1"
+  },
+  "dependencies": {
+    "prettier": "^3.3.3"
+  }
+}
