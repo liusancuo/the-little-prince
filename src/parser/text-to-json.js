@@ -3,11 +3,15 @@ const path = require('node:path');
 const readline = require('node:readline');
 
 const dirPath = path.join(process.cwd(), '/book/txt');
-const dirs = fs.readdirSync(dirPath);
+const dirs = ['5.txt']; //fs.readdirSync(dirPath);
 
 // 标点符号unicode字符序列，包含部分全角
 const sequence = '[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E\u2010-\u201F]';
-const punctuationRegex = new RegExp(`^${sequence}|${sequence}$`, 'g');
+const punctuationRegex = new RegExp(`^${sequence}|${sequence}+$`, 'g');
+
+const wordRegex = /^[a-zA-Z\-]+$/;
+// —, EM DASH, U+2014
+const sentenceSeparator = /—/;
 
 const createFile = (filename, map) => {
   const name = path.parse(filename).name;
@@ -15,20 +19,40 @@ const createFile = (filename, map) => {
   fs.writeFileSync(jsonFilePath, JSON.stringify(map));
 };
 
+const parseWord = (word, wordsMap) => {
+  let times = wordsMap[word];
+
+  if (!wordRegex.test(word)) {
+    return;
+  }
+
+  if (!times) {
+    wordsMap[word] = 1;
+    return;
+  }
+
+  wordsMap[word] = ++times;
+};
+
 const parseText = (data, wordsMap) => {
   const roughWords = data.split(' ');
+  const newRoughWords = [];
 
   roughWords.forEach((word) => {
     word = word.replace(punctuationRegex, '').toLowerCase();
 
-    let times = wordsMap[word];
+    const newWords = word.split(sentenceSeparator);
 
-    if (!times) {
-      wordsMap[word] = 1;
+    if (newWords.length > 1) {
+      newRoughWords.push(...newWords);
       return;
     }
 
-    wordsMap[word] = ++times;
+    parseWord(word, wordsMap);
+  });
+
+  newRoughWords.forEach((word) => {
+    parseWord(word, wordsMap);
   });
 
   return wordsMap;
