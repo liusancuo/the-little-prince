@@ -3,7 +3,7 @@ const path = require('node:path');
 const readline = require('node:readline');
 
 const dirPath = path.join(process.cwd(), '/book/txt');
-const dirs = ['20.txt', '21.txt']; //fs.readdirSync(dirPath);
+const dirs = ['26.txt', '27.txt']; //fs.readdirSync(dirPath);
 
 // 标点符号unicode字符序列，包含部分全角
 const sequence = '[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E\u2010-\u201F]';
